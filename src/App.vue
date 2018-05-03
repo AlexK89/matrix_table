@@ -103,7 +103,7 @@
 <style lang="scss" scoped>
 	#app {
 		width: 90%;
-		max-width: 1600px;
+		max-width: 1800px;
 		margin: 5em auto 0;
 		overflow-x: scroll;
 		font-family: 'Roboto', sans-serif;
