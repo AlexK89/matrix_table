@@ -17,7 +17,7 @@
 				</div>
 				<div class="table__body__row__cell">
 					<ul>
-						<li v-for="item in process.requirements" class="requirements">{{item.name}},</li>
+						<li v-for="item in process.requirements" class="requirements">{{item.name}}</li>
 					</ul>
 				</div>
 				<div class="table__body__row__cell">
@@ -45,7 +45,7 @@
 					<p>{{process.issues}}</p>
 				</div>
 				<div class="table__body__row__cell">
-					<p>{{process.status}}</p>
+					<p class="status" :style="{backgroundColor: process.status}">{{process.status}}</p>
 				</div>
 			</div>
 		</div>
@@ -107,14 +107,20 @@
 		margin: 5em auto 0;
 		overflow-x: scroll;
 		font-family: 'Roboto', sans-serif;
+		box-shadow: 0 10px 20px rgba(0,0,0,0.19),
+					0 6px 6px rgba(0,0,0,0.23);
 	}
 
 	.table {
 		display: table;
+		border-collapse: collapse;
 
 		&__header {
 			display: table-row;
-			background-color: antiquewhite;
+			background-color: #303F9F;
+			color: #ffffff;
+			font-size: 1.3em;
+
 
 			&__title {
 				display: table-cell;
@@ -125,28 +131,38 @@
 		}
 
 		&__body {
-			color: #ddd;
+
 			&__row {
 				display: table-row;
+				transition: .3s;
+				color: #757575;
 
-				&:nth-child(2n) {
-					background-color: cornflowerblue;
+				&:hover {
+					box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+					background-color: #FF4081;
+					color: #ffffff;
 				}
+
 				&__cell {
 					display: table-cell;
-					min-width: 100px;
-					padding: 0.5em 1em;
+					min-width: 150px;
+					padding: 2em 1em;
 					vertical-align: middle;
 
 					ul {
 						padding: 0;
 
-						.topics {
+						.topics,
+						.requirements {
 							list-style: none;
 						}
-						.requirements {
-							display: inline;
-						}
+					}
+
+					.status {
+						color: #ffffff;
+						text-align: center;
+						padding: 0.5em;
+						border-radius: 3px;
 					}
 				}
 			}
