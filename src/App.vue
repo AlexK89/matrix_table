@@ -1,107 +1,155 @@
 <template>
-    <div id="app">
-        <h2>{{test}}</h2>
-        <div v-for="element in dataArray">
-            {{element}}
-            <p>==============</p>
-        </div>
+	<div id="app">
+		<div class="table">
+			<div class="table__header">
+				<div v-for="title in titles" class="table__header__title">
+					<h5>{{ title }}</h5>
+				</div>
+			</div>
+			<div class="table__body__row" v-for="process in dataArray">
+				<div class="table__body__row__cell">
+					<p>{{process.name}}</p>
+				</div>
+				<div class="table__body__row__cell">
+					<ul>
+						<li v-for="item in process.topics" class="topics">{{item.name}}</li>
+					</ul>
+				</div>
+				<div class="table__body__row__cell">
+					<ul>
+						<li v-for="item in process.requirements" class="requirements">{{item.name}},</li>
+					</ul>
+				</div>
+				<div class="table__body__row__cell">
+					<ul>
+						<li v-for="item in process.risks">{{item.name}}</li>
+					</ul>
+				</div>
+				<div class="table__body__row__cell">
+					<ul>
+						<li v-for="item in process.controls">{{item.name}}</li>
+					</ul>
+				</div>
+				<div class="table__body__row__cell">
+					<ul>
+						<li v-for="item in process.reminders">{{item.name}}</li>
+					</ul>
+				</div>
+				<div class="table__body__row__cell">
+					<p v-if="process.lastAttestation">{{isoToDate(process.lastAttestation.date)}}</p>
+				</div>
+				<div class="table__body__row__cell">
+					<p>{{process.failures}}</p>
+				</div>
+				<div class="table__body__row__cell">
+					<p>{{process.issues}}</p>
+				</div>
+				<div class="table__body__row__cell">
+					<p>{{process.status}}</p>
+				</div>
+			</div>
+		</div>
 
-        <div style="overflow-x:auto;">
-            <table border="1">
-                <tr>
-                    <th>Processes</th>
-                    <th>Topics and objectives</th>
-                    <th>Requirements</th>
-                    <th>Risks</th>
-                    <th>Controls</th>
-                    <th>Reminders</th>
-                    <th>Last Attest</th>
-                    <th>Failures</th>
-                    <th>Issues</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-
-                </tr>
-                <tr v-for="element in dataArray">
-                    <td>{{element.name}}</td>
-                    <td>
-                        <ul v-for="item in element.topics">
-                            <li>{{item.name}}</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <p v-for="item in element.requirements">
-                            <span>{{item.name}}</span> 
-                        </p>
-                    </td>
-                    <td>
-                        <ul v-for="item in element.risks">
-                            <li>{{item.name}}</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul v-for="item in element.controls">
-                            <li>{{item.name}}</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul v-for="item in element.reminders">
-                            <li>{{item.name}}</li>
-                        </ul>
-                    </td>
-                    <td v-if="element.lastAttestation">{{isoToDate(element.lastAttestation.date)}}</td>
-                    <td v-else></td>
-                    <td>{{element.failures}}</td>
-                    <td>{{element.issues}}</td>
-                    <td>{{element.status}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+	</div>
 </template>
 
 <script>
-    export default {
-        name: 'app',
-        data() {
-            return {
-                test: 'hello',
-                dataArray: []
-            }
-        },
-        mounted() {
-            //AJAx request
-            axios
-                .get('https://demo7244264.mockable.io/matrix')
-                .then(response => {
-                    this.dataArray = response.data;
-                })
-        },
-        methods: {
-            isoToDate(date) {
-                let ourDate = new Date(date).toDateString();
+	export default {
+		name: 'app',
+		data() {
+			return {
+				dataArray: [],
+				titles: [
+					'Processes',
+					'Topics and objectives',
+					'Requirements',
+					'Risks',
+					'Controls',
+					'Reminders',
+					'Last Attest',
+					'Failures',
+					'Issues',
+					'Status'
+				]
+			}
+		},
+		mounted() {
+			this.getData();
+		},
+		methods: {
+			isoToDate(date) {
+				let ourDate = new Date(date).toDateString();
 
-                return ourDate.substr(ourDate.indexOf(' ') + 1);
-            }
-        }
-    }
+				return ourDate.substr(ourDate.indexOf(' ') + 1);
+			},
+			getData() {
+				//AJAx request
+				axios
+					.get('https://demo7244264.mockable.io/matrix')
+					.then(response => {
+						this.dataArray = response.data;
+					})
+					.catch((error) => {
+						console.log(error);
+						setTimeout(() => {
+							this.getData();
+						}, 2000);
+					});
+			}
+		}
+	}
 </script>
 
-<style lang="scss">
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-        border: 1px solid #ddd;
-    }
+<style lang="scss" scoped>
+	#app {
+		width: 90%;
+		max-width: 1600px;
+		margin: 5em auto 0;
+		overflow-x: scroll;
+		font-family: 'Roboto', sans-serif;
+	}
 
-    th, td {
-        text-align: left;
-        padding: 8px;
-    }
+	.table {
+		display: table;
 
-    tr:nth-child(even){
-        background-color: #f2f2f2
-    }
+		&__header {
+			display: table-row;
+			background-color: antiquewhite;
+
+			&__title {
+				display: table-cell;
+				vertical-align: middle;
+				padding: 0.5em 1em;
+				font-weight: bold;
+			}
+		}
+
+		&__body {
+			color: #ddd;
+			&__row {
+				display: table-row;
+
+				&:nth-child(2n) {
+					background-color: cornflowerblue;
+				}
+				&__cell {
+					display: table-cell;
+					min-width: 100px;
+					padding: 0.5em 1em;
+					vertical-align: middle;
+
+					ul {
+						padding: 0;
+
+						.topics {
+							list-style: none;
+						}
+						.requirements {
+							display: inline;
+						}
+					}
+				}
+			}
+		}
+	}
 </style>
